@@ -1,0 +1,7 @@
+Administrador:
+nome=Dinis, username=Dinis, password=1234
+Jogadores:
+nome=teste, username=teste, nickname=teste
+Treinadores:
+Torneios:
+Equipas:
