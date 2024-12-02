@@ -1,0 +1,3 @@
+Equipas:
+nome=patinhos,treinador=paulo,jogadores=jose
+nome=test1234356,treinador=teste,jogadores=jose

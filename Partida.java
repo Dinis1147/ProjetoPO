@@ -1,7 +1,3 @@
-
-
-
-
 public class Partida {
     private static int contadorId = 1;
     private int idPartida;
@@ -34,10 +30,43 @@ public class Partida {
         return equipaB;
     }
 
-    public void setPontos(int pontosA, int pontosB) {
+    public void registrarResultado(int pontosA, int pontosB) {
+        if (resultadoRegistrado) {
+            throw new IllegalStateException("O resultado desta partida já foi registrado");
+        }
+        if (pontosA < 0 || pontosB < 0) {
+            throw new IllegalArgumentException("Os pontos não podem ser negativos");
+        }
         this.pontosA = pontosA;
         this.pontosB = pontosB;
         this.resultadoRegistrado = true;
+    }
+
+    public boolean isResultadoRegistrado() {
+        return resultadoRegistrado;
+    }
+
+    public boolean isJogada() {
+        return resultadoRegistrado;
+    }
+
+    public int getPontosA() {
+        return pontosA;
+    }
+
+    public int getPontosB() {
+        return pontosB;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public String getResultado() {
+        if (!resultadoRegistrado) {
+            return "Partida ainda não realizada";
+        }
+        return equipaA.getNome() + " " + pontosA + " x " + pontosB + " " + equipaB.getNome();
     }
 
     public Equipa getVencedor() {
@@ -53,6 +82,15 @@ public class Partida {
 
     @Override
     public String toString() {
-        return "Partida " + idPartida + ": " + equipaA.getNome() + " vs " + equipaB.getNome() + " em " + data + " - Resultado: " + pontosA + " - " + pontosB;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Partida #").append(idPartida).append("\n");
+        sb.append("Data: ").append(data).append("\n");
+        sb.append(equipaA.getNome()).append(" vs ").append(equipaB.getNome()).append("\n");
+        if (resultadoRegistrado) {
+            sb.append("Resultado: ").append(getResultado());
+        } else {
+            sb.append("Status: Aguardando realização");
+        }
+        return sb.toString();
     }
 }

@@ -1,0 +1,1 @@
+2,teste,teste,teste,0,0,0, Personagem Principal: teste, KDA: teste
