@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.io.File;
 
 public class Main {
-    private static final String ADMIN_FILE = "dados/administradores.txt";
+    private static final String ADMINISTRADORES_FILE = "dados/administradores.txt";
     private static final String JOGADORES_FILE = "dados/dados_jogador.txt";
     private static final String TREINADORES_FILE = "dados/dados_treinador.txt";
     private static final String EQUIPAS_FILE = "dados/dados_equipa.txt";
@@ -82,7 +82,7 @@ public class Main {
     private static List<Administrador> carregarAdministradores() {
         List<Administrador> administradores = new ArrayList<>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(ADMIN_FILE));
+            BufferedReader reader = new BufferedReader(new FileReader(ADMINISTRADORES_FILE));
             String linha;
             boolean primeiraLinha = true;
             
@@ -138,7 +138,7 @@ public class Main {
     private static List<Treinador> carregarTreinadores() {
         List<Treinador> treinadores = new ArrayList<>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("dados/dados_treinador.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader(TREINADORES_FILE));
             String linha;
             boolean primeiraLinha = true;
             
@@ -387,7 +387,7 @@ public class Main {
     }
 
     private static void salvarAdministradores() throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(ADMIN_FILE));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(ADMINISTRADORES_FILE));
         writer.write("Administrador:\n");
         for (Administrador admin : administradores) {
             writer.write(String.format("nome=%s,username=%s,password=%s\n",
@@ -442,7 +442,7 @@ public class Main {
 
         Administrador novoAdmin = new Administrador(nome, username, password);
         administradores.add(novoAdmin);
-        novoAdmin.salvarDadosTxt(ADMIN_FILE);
+        novoAdmin.salvarDadosTxt(ADMINISTRADORES_FILE);
         System.out.println("Administrador criado com sucesso!");
     }
 
