@@ -908,6 +908,248 @@ public class Main {
                             break;
                     }
                     break;
+                case 9:
+                    if (torneios.isEmpty()) {
+                        System.out.println("Não há torneios cadastrados. Por favor, crie um torneio primeiro.");
+                        break;
+                    }
+                    
+                    System.out.println("\nTorneios disponíveis:");
+                    for (int i = 0; i < torneios.size(); i++) {
+                        System.out.println((i + 1) + ". " + torneios.get(i).getNome());
+                    }
+                    
+                    System.out.print("Escolha o número do torneio: ");
+                    int escolhaTorneio = scanner.nextInt();
+                    scanner.nextLine();
+                    
+                    if (escolhaTorneio < 1 || escolhaTorneio > torneios.size()) {
+                        System.out.println("Opção inválida!");
+                        break;
+                    }
+                    
+                    Torneio torneioParaPartida = torneios.get(escolhaTorneio - 1);
+                    List<Equipa> equipasDoTorneio = torneioParaPartida.getEquipas();
+                    
+                    if (equipasDoTorneio.size() < 2) {
+                        System.out.println("O torneio precisa ter pelo menos 2 equipes para agendar partidas.");
+                        break;
+                    }
+                    
+                    System.out.println("\nEquipes do torneio:");
+                    for (int i = 0; i < equipasDoTorneio.size(); i++) {
+                        System.out.println((i + 1) + ". " + equipasDoTorneio.get(i).getNome());
+                    }
+                    
+                    System.out.print("Escolha o número da primeira equipe: ");
+                    int escolhaEquipe1 = scanner.nextInt();
+                    scanner.nextLine();
+                    
+                    if (escolhaEquipe1 < 1 || escolhaEquipe1 > equipasDoTorneio.size()) {
+                        System.out.println("Opção inválida!");
+                        break;
+                    }
+                    
+                    System.out.print("Escolha o número da segunda equipe: ");
+                    int escolhaEquipe2 = scanner.nextInt();
+                    scanner.nextLine();
+                    
+                    if (escolhaEquipe2 < 1 || escolhaEquipe2 > equipasDoTorneio.size() || escolhaEquipe2 == escolhaEquipe1) {
+                        System.out.println("Opção inválida ou mesma equipe selecionada!");
+                        break;
+                    }
+                    
+                    System.out.print("Digite a data da partida (dd/mm/aaaa): ");
+                    String dataPartida = scanner.nextLine();
+                    
+                    System.out.print("Digite o horário da partida (hh:mm): ");
+                    String horarioPartida = scanner.nextLine();
+                    
+                    Equipa equipe1 = equipasDoTorneio.get(escolhaEquipe1 - 1);
+                    Equipa equipe2 = equipasDoTorneio.get(escolhaEquipe2 - 1);
+                    
+                    // Agendar a partida usando o método do torneio
+                    torneioParaPartida.agendarPartida(equipe1, equipe2, dataPartida, horarioPartida);
+                    
+                    // Salvar o torneio atualizado
+                    salvarTorneioNoArquivo(torneioParaPartida);
+                    System.out.println("Partida agendada com sucesso!");
+                    break;
+                case 10:
+                    if (torneios.isEmpty()) {
+                        System.out.println("Não há torneios cadastrados.");
+                        break;
+                    }
+                    
+                    System.out.println("\nTorneios disponíveis:");
+                    for (int i = 0; i < torneios.size(); i++) {
+                        System.out.println((i + 1) + ". " + torneios.get(i).getNome());
+                    }
+                    
+                    System.out.print("Escolha o número do torneio: ");
+                    int escolhaTorneioResultado = scanner.nextInt();
+                    scanner.nextLine();
+                    
+                    if (escolhaTorneioResultado < 1 || escolhaTorneioResultado > torneios.size()) {
+                        System.out.println("Opção inválida!");
+                        break;
+                    }
+                    
+                    Torneio torneioParaResultado = torneios.get(escolhaTorneioResultado - 1);
+                    List<Partida> partidas = torneioParaResultado.getPartidas();
+                    
+                    if (partidas.isEmpty()) {
+                        System.out.println("Não há partidas agendadas neste torneio.");
+                        break;
+                    }
+                    
+                    System.out.println("\nPartidas disponíveis:");
+                    for (int i = 0; i < partidas.size(); i++) {
+                        Partida p = partidas.get(i);
+                        if (!p.isResultadoRegistrado()) {
+                            System.out.println((i + 1) + ". " + p.getEquipaA().getNome() + " vs " + 
+                                             p.getEquipaB().getNome() + " - " + p.getData() + " às " + p.getHorario());
+                        }
+                    }
+                    
+                    System.out.print("Escolha o número da partida: ");
+                    int escolhaPartida = scanner.nextInt();
+                    scanner.nextLine();
+                    
+                    if (escolhaPartida < 1 || escolhaPartida > partidas.size()) {
+                        System.out.println("Opção inválida!");
+                        break;
+                    }
+                    
+                    Partida partidaEscolhida = partidas.get(escolhaPartida - 1);
+                    
+                    if (partidaEscolhida.isResultadoRegistrado()) {
+                        System.out.println("Esta partida já tem resultado registrado!");
+                        break;
+                    }
+                    
+                    System.out.println("\nRegistrando resultado para: " + 
+                                     partidaEscolhida.getEquipaA().getNome() + " vs " + 
+                                     partidaEscolhida.getEquipaB().getNome());
+                    
+                    System.out.print("Digite os pontos para " + partidaEscolhida.getEquipaA().getNome() + ": ");
+                    int pontosA = scanner.nextInt();
+                    
+                    System.out.print("Digite os pontos para " + partidaEscolhida.getEquipaB().getNome() + ": ");
+                    int pontosB = scanner.nextInt();
+                    scanner.nextLine();
+                    
+                    try {
+                        partidaEscolhida.registrarResultado(pontosA, pontosB);
+                        // Salvar o torneio atualizado
+                        salvarTorneioNoArquivo(torneioParaResultado);
+                        System.out.println("Resultado registrado com sucesso!");
+                    } catch (IllegalArgumentException | IllegalStateException e) {
+                        System.out.println("Erro ao registrar resultado: " + e.getMessage());
+                    }
+                    break;
+                case 11:
+                    if (torneios.isEmpty()) {
+                        System.out.println("Não há torneios cadastrados.");
+                        break;
+                    }
+                    
+                    System.out.println("\nTorneios disponíveis:");
+                    for (int i = 0; i < torneios.size(); i++) {
+                        System.out.println((i + 1) + ". " + torneios.get(i).getNome());
+                    }
+                    
+                    System.out.print("Escolha o número do torneio: ");
+                    int escolhaTorneioEstat = scanner.nextInt();
+                    scanner.nextLine();
+                    
+                    if (escolhaTorneioEstat < 1 || escolhaTorneioEstat > torneios.size()) {
+                        System.out.println("Opção inválida!");
+                        break;
+                    }
+                    
+                    Torneio torneioEstatisticas = torneios.get(escolhaTorneioEstat - 1);
+                    List<Partida> partidasTorneio = torneioEstatisticas.getPartidas();
+                    List<Equipa> equipasTorneio = torneioEstatisticas.getEquipasParticipantes();
+                    
+                    System.out.println("\nEstatísticas do Torneio: " + torneioEstatisticas.getNome());
+                    System.out.println("Jogo: " + torneioEstatisticas.getJogo());
+                    System.out.println("Data Início: " + torneioEstatisticas.getDataInicio());
+                    System.out.println("Data Fim: " + torneioEstatisticas.getDataFim());
+                    System.out.println("Prêmio: " + torneioEstatisticas.getPremio());
+                    
+                    System.out.println("\nEquipes Participantes:");
+                    for (Equipa equipa : equipasTorneio) {
+                        int vitorias = 0;
+                        int derrotas = 0;
+                        int pontosMarcados = 0;
+                        int pontosRecebidos = 0;
+                        
+                        for (Partida partida : partidasTorneio) {
+                            if (partida.isResultadoRegistrado()) {
+                                if (partida.getEquipaA().equals(equipa)) {
+                                    pontosMarcados += partida.getPontosA();
+                                    pontosRecebidos += partida.getPontosB();
+                                    if (partida.getPontosA() > partida.getPontosB()) {
+                                        vitorias++;
+                                    } else {
+                                        derrotas++;
+                                    }
+                                } else if (partida.getEquipaB().equals(equipa)) {
+                                    pontosMarcados += partida.getPontosB();
+                                    pontosRecebidos += partida.getPontosA();
+                                    if (partida.getPontosB() > partida.getPontosA()) {
+                                        vitorias++;
+                                    } else {
+                                        derrotas++;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        System.out.println("\nEquipe: " + equipa.getNome());
+                        System.out.println("Vitórias: " + vitorias);
+                        System.out.println("Derrotas: " + derrotas);
+                        System.out.println("Pontos Marcados: " + pontosMarcados);
+                        System.out.println("Pontos Recebidos: " + pontosRecebidos);
+                        if (vitorias + derrotas > 0) {
+                            double aproveitamento = (vitorias * 100.0) / (vitorias + derrotas);
+                            System.out.printf("Aproveitamento: %.1f%%\n", aproveitamento);
+                        }
+                    }
+                    
+                    System.out.println("\nPartidas Realizadas:");
+                    boolean temPartidasRealizadas = false;
+                    for (Partida partida : partidasTorneio) {
+                        if (partida.isResultadoRegistrado()) {
+                            temPartidasRealizadas = true;
+                            System.out.println(partida.getEquipaA().getNome() + " " + 
+                                             partida.getPontosA() + " x " + 
+                                             partida.getPontosB() + " " + 
+                                             partida.getEquipaB().getNome() + 
+                                             " (" + partida.getData() + " às " + 
+                                             partida.getHorario() + ")");
+                        }
+                    }
+                    if (!temPartidasRealizadas) {
+                        System.out.println("Nenhuma partida realizada ainda.");
+                    }
+                    
+                    System.out.println("\nPróximas Partidas:");
+                    boolean temProximasPartidas = false;
+                    for (Partida partida : partidasTorneio) {
+                        if (!partida.isResultadoRegistrado()) {
+                            temProximasPartidas = true;
+                            System.out.println(partida.getEquipaA().getNome() + " vs " + 
+                                             partida.getEquipaB().getNome() + 
+                                             " (" + partida.getData() + " às " + 
+                                             partida.getHorario() + ")");
+                        }
+                    }
+                    if (!temProximasPartidas) {
+                        System.out.println("Não há próximas partidas agendadas.");
+                    }
+                    break;
                 case 12:
                     return;
                 default:
@@ -1067,7 +1309,7 @@ public class Main {
                     break;
 
                 case 3:
-                    equipasParticipantes = torneio.getEquipas();
+                    equipasParticipantes = torneio.getEquipasParticipantes();
                     if (equipasParticipantes.isEmpty()) {
                         System.out.println("Não há equipas participantes no torneio.");
                     } else {
@@ -1197,86 +1439,70 @@ public class Main {
 
     private static void salvarTorneioNoArquivo(Torneio torneio) {
         try {
-            // Lê todas as linhas do arquivo
-            List<String> linhas = new ArrayList<>();
-            boolean torneioEncontrado = false;
+            // Primeiro, lê todos os torneios existentes
+            List<Torneio> torneiosExistentes = carregarTorneios();
             
-            File arquivo = new File(TORNEIOS_FILE);
-            if (arquivo.exists()) {
-                BufferedReader reader = new BufferedReader(new FileReader(TORNEIOS_FILE));
-                String linha;
-                boolean primeiraLinha = true;
-                
-                while ((linha = reader.readLine()) != null) {
-                    if (primeiraLinha) {
-                        linhas.add(linha);
-                        primeiraLinha = false;
-                        continue;
-                    }
-                    
-                    if (linha.contains("nome=" + torneio.getNome())) {
-                        // Atualiza a linha do torneio existente
-                        StringBuilder novaLinha = new StringBuilder();
-                        novaLinha.append("nome=").append(torneio.getNome()).append(",");
-                        novaLinha.append("jogo=").append(torneio.getJogo()).append(",");
-                        novaLinha.append("dataInicio=").append(torneio.getDataInicio()).append(",");
-                        novaLinha.append("dataFim=").append(torneio.getDataFim()).append(",");
-                        novaLinha.append("premio=").append(torneio.getPremio()).append(",");
-                        novaLinha.append("equipas=");
-                        
-                        List<Equipa> equipasTorneio = torneio.getEquipasParticipantes();
-                        for (int i = 0; i < equipasTorneio.size(); i++) {
-                            novaLinha.append(equipasTorneio.get(i).getNome());
-                            if (i < equipasTorneio.size() - 1) {
-                                novaLinha.append(";");
-                            }
-                        }
-                        
-                        linhas.add(novaLinha.toString());
-                        torneioEncontrado = true;
-                    } else {
-                        linhas.add(linha);
-                    }
+            // Atualiza ou adiciona o torneio na lista
+            boolean encontrado = false;
+            for (int i = 0; i < torneiosExistentes.size(); i++) {
+                if (torneiosExistentes.get(i).getNome().equals(torneio.getNome())) {
+                    torneiosExistentes.set(i, torneio);
+                    encontrado = true;
+                    break;
                 }
-                reader.close();
-            } else {
-                linhas.add("Torneios:");
+            }
+            if (!encontrado) {
+                torneiosExistentes.add(torneio);
             }
             
-            // Se o torneio não existia, adiciona como nova linha
-            if (!torneioEncontrado) {
-                StringBuilder novaLinha = new StringBuilder();
-                novaLinha.append("nome=").append(torneio.getNome()).append(",");
-                novaLinha.append("jogo=").append(torneio.getJogo()).append(",");
-                novaLinha.append("dataInicio=").append(torneio.getDataInicio()).append(",");
-                novaLinha.append("dataFim=").append(torneio.getDataFim()).append(",");
-                novaLinha.append("premio=").append(torneio.getPremio()).append(",");
-                novaLinha.append("equipas=");
-                
-                List<Equipa> equipasTorneio = torneio.getEquipasParticipantes();
-                for (int i = 0; i < equipasTorneio.size(); i++) {
-                    novaLinha.append(equipasTorneio.get(i).getNome());
-                    if (i < equipasTorneio.size() - 1) {
-                        novaLinha.append(";");
-                    }
-                }
-                
-                linhas.add(novaLinha.toString());
-            }
-            
-            // Reescreve o arquivo com as linhas atualizadas
+            // Salva todos os torneios de volta no arquivo
             BufferedWriter writer = new BufferedWriter(new FileWriter(TORNEIOS_FILE));
-            for (int i = 0; i < linhas.size(); i++) {
-                writer.write(linhas.get(i));
-                if (i < linhas.size() - 1) {
-                    writer.newLine();
+            writer.write("Torneios:\n");
+            
+            for (Torneio t : torneiosExistentes) {
+                StringBuilder linha = new StringBuilder();
+                linha.append("nome=").append(t.getNome()).append(",");
+                linha.append("jogo=").append(t.getJogo()).append(",");
+                linha.append("dataInicio=").append(t.getDataInicio()).append(",");
+                linha.append("dataFim=").append(t.getDataFim()).append(",");
+                linha.append("premio=").append(t.getPremio()).append(",");
+                
+                // Adiciona as equipes
+                linha.append("equipas=");
+                List<Equipa> equipas = t.getEquipasParticipantes();
+                if (!equipas.isEmpty()) {
+                    for (int i = 0; i < equipas.size(); i++) {
+                        if (i > 0) linha.append(";");
+                        linha.append(equipas.get(i).getNome());
+                    }
                 }
+                linha.append(",");
+                
+                // Adiciona as partidas
+                linha.append("partidas=");
+                List<Partida> partidas = t.getPartidas();
+                if (!partidas.isEmpty()) {
+                    for (int i = 0; i < partidas.size(); i++) {
+                        if (i > 0) linha.append(";");
+                        Partida p = partidas.get(i);
+                        linha.append(p.getEquipaA().getNome()).append("-")
+                             .append(p.getEquipaB().getNome()).append("-")
+                             .append(p.getData()).append("-")
+                             .append(p.getHorario());
+                        if (p.isResultadoRegistrado()) {
+                            linha.append("-").append(p.getPontosA())
+                                 .append("-").append(p.getPontosB());
+                        }
+                    }
+                }
+                
+                writer.write(linha.toString() + "\n");
             }
             writer.close();
             
-            System.out.println("Torneio " + (torneioEncontrado ? "atualizado" : "salvo") + " no arquivo com sucesso!");
+            System.out.println("Torneio " + (encontrado ? "atualizado" : "salvo") + " no arquivo com sucesso!");
         } catch (IOException e) {
-            System.out.println("Erro ao salvar torneio no arquivo: " + e.getMessage());
+            System.out.println("Erro ao salvar torneio: " + e.getMessage());
         }
     }
 }

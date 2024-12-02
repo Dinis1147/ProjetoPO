@@ -82,14 +82,14 @@ public class Administrador extends Entidade {
         torneios.add(torneio);
     }
 
-    public void agendarPartida(Torneio torneio, Equipa equipaA, Equipa equipaB, String data) {
-        if (torneio == null || equipaA == null || equipaB == null || data == null) {
+    public void agendarPartida(Torneio torneio, Equipa equipaA, Equipa equipaB, String data, String horario) {
+        if (torneio == null || equipaA == null || equipaB == null || data == null || horario == null) {
             throw new IllegalArgumentException("Parâmetros não podem ser nulos");
         }
         if (!torneios.contains(torneio)) {
-            throw new IllegalArgumentException("Torneio não encontrado no sistema");
+            throw new IllegalArgumentException("O torneio não está na lista de torneios do administrador");
         }
-        torneio.agendarPartida(equipaA, equipaB, data);
+        torneio.agendarPartida(equipaA, equipaB, data, horario);
         System.out.println("Partida agendada com sucesso entre " + equipaA.getNome() + " e " + equipaB.getNome() + " no torneio " + torneio.getNome());
     }
 

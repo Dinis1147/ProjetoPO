@@ -72,6 +72,10 @@ public class Torneio {
         tabelaClassificacao.adicionarEquipa(equipa);
     }
 
+    public void adicionarPartida(Partida partida) {
+        partidas.add(partida);
+    }
+
     public void iniciarTorneio() {
         if (equipasParticipantes.size() < 2) {
             throw new IllegalStateException("São necessárias pelo menos 2 equipas para iniciar o torneio");
@@ -79,14 +83,14 @@ public class Torneio {
         torneioEmAndamento = true;
     }
 
-    public void agendarPartida(Equipa equipaA, Equipa equipaB, String data) {
+    public void agendarPartida(Equipa equipaA, Equipa equipaB, String data, String horario) {
         if (!torneioEmAndamento) {
             throw new IllegalStateException("O torneio precisa estar em andamento para agendar partidas");
         }
         if (!equipasParticipantes.contains(equipaA) || !equipasParticipantes.contains(equipaB)) {
             throw new IllegalArgumentException("Ambas as equipas devem estar inscritas no torneio");
         }
-        Partida partida = new Partida(equipaA, equipaB, data);
+        Partida partida = new Partida(equipaA, equipaB, data, horario);
         partidas.add(partida);
     }
 
