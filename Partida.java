@@ -4,15 +4,17 @@ public class Partida {
     private Equipa equipaA;
     private Equipa equipaB;
     private String data;
+    private String horario;
     private int pontosA;
     private int pontosB;
     private boolean resultadoRegistrado;
 
-    public Partida(Equipa equipaA, Equipa equipaB, String data) {
+    public Partida(Equipa equipaA, Equipa equipaB, String data, String horario) {
         this.idPartida = contadorId++;
         this.equipaA = equipaA;
         this.equipaB = equipaB;
         this.data = data;
+        this.horario = horario;
         this.pontosA = 0;
         this.pontosB = 0;
         this.resultadoRegistrado = false;
@@ -58,8 +60,22 @@ public class Partida {
         return pontosB;
     }
 
+    public int getPontosEquipa(Equipa equipa) {
+        if (equipa.equals(equipaA)) {
+            return pontosA;
+        } else if (equipa.equals(equipaB)) {
+            return pontosB;
+        } else {
+            throw new IllegalArgumentException("Equipa não participa desta partida");
+        }
+    }
+
     public String getData() {
         return data;
+    }
+
+    public String getHorario() {
+        return horario;
     }
 
     public String getResultado() {
@@ -84,7 +100,7 @@ public class Partida {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Partida #").append(idPartida).append("\n");
-        sb.append("Data: ").append(data).append("\n");
+        sb.append("Data: ").append(data).append(" às ").append(horario).append("\n");
         sb.append(equipaA.getNome()).append(" vs ").append(equipaB.getNome()).append("\n");
         if (resultadoRegistrado) {
             sb.append("Resultado: ").append(getResultado());
